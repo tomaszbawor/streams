@@ -1,6 +1,8 @@
 import React from "react";
-import { PropTypes } from "prop-types";
+import PropTypes from "prop-types";
 import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { createStream } from "../../actions";
 
 class StreamCreate extends React.Component {
   renderInput = ({ input, label, meta }) => {
@@ -31,7 +33,8 @@ class StreamCreate extends React.Component {
   };
 
   onSubmit = formValues => {
-    return formValues;
+    const { createStream: createStreamAction } = this.props;
+    createStreamAction(formValues);
   };
 
   render() {
@@ -53,7 +56,8 @@ class StreamCreate extends React.Component {
 }
 
 StreamCreate.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  createStream: PropTypes.func.isRequired
 };
 
 const validate = formValues => {
@@ -70,7 +74,9 @@ const validate = formValues => {
   return errors;
 };
 
-export default reduxForm({
+const formWrapped = reduxForm({
   form: "streamCreate",
   validate
 })(StreamCreate);
+
+export default connect(null, { createStream })(formWrapped);
